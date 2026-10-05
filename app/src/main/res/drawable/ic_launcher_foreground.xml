@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- base rounded rectangle of the cloud -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M32,58 h44 a10,10 0 0 1 10,10 v0 a10,10 0 0 1 -10,10 h-44 a10,10 0 0 1 -10,-10 v0 a10,10 0 0 1 10,-10 z" />
+    <!-- three overlapping circles forming the puffy top of the cloud -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M40,44 m-16,0 a16,16 0 1,0 32,0 a16,16 0 1,0 -32,0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M58,36 m-20,0 a20,20 0 1,0 40,0 a20,20 0 1,0 -40,0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M76,46 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0" />
+    <!-- cover the upper half of the circles' overlap seam with a solid band -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M24,44 h60 v20 h-60 z" />
+</vector>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- TDLib ডাউনলোড করা ফাইলগুলো filesDir/tdlib_files এর ভেতরে রাখে -->
+    <files-path name="tdlib_downloads" path="tdlib_files/" />
+    <!-- picker থেকে কপি করা আপলোড-এর জন্য ব্যবহৃত ক্যাশ ফাইল -->
+    <cache-path name="upload_cache" path="." />
+</paths>

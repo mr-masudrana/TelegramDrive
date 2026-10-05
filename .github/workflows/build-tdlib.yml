@@ -1,0 +1,67 @@
+name: Build TDLib for Android
+
+# Run manually from the GitHub Actions tab (ফোনের ব্রাউজার থেকেও ট্রিগার করা যায়)
+on:
+  workflow_dispatch:
+    inputs:
+      td_ref:
+        description: "tdlib/td এর ট্যাগ/ব্রাঞ্চ (খালি রাখলে master)"
+        required: false
+        default: "master"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install build deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake gperf php-cli perl unzip
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Clone TDLib
+        run: |
+          git clone --depth 1 --branch "${{ github.event.inputs.td_ref }}" https://github.com/tdlib/td.git
+
+      - name: Check environment
+        working-directory: td/example/android
+        run: |
+          chmod +x *.sh
+          ./check-environment.sh
+
+      # নিজস্ব Android SDK ডাউনলোড করে (NDK + cmake সহ) — কোনো external action লাগে না
+      - name: Fetch Android SDK
+        working-directory: td/example/android
+        run: ./fetch-sdk.sh
+
+      - name: Build OpenSSL for Android
+        working-directory: td/example/android
+        run: ./build-openssl.sh
+
+      - name: Build TDLib for Android
+        working-directory: td/example/android
+        run: ./build-tdlib.sh
+
+      # আউটপুট: td/example/android/tdlib/libs (.so per ABI), tdlib/java (Java sources)
+      - name: Upload jniLibs (.so files)
+        uses: actions/upload-artifact@v4
+        with:
+          name: tdlib-jnilibs
+          path: td/example/android/tdlib/libs
+
+      - name: Upload Java sources
+        uses: actions/upload-artifact@v4
+        with:
+          name: tdlib-java-sources
+          path: td/example/android/tdlib/java
+
+      - name: Upload full tdlib.zip (libs + java + javadoc together)
+        uses: actions/upload-artifact@v4
+        with:
+          name: tdlib-full-zip
+          path: td/example/android/tdlib/tdlib.zip

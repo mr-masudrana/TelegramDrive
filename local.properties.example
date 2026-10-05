@@ -1,0 +1,7 @@
+# এই ফাইলটা কপি করে local.properties নামে রাখুন (যেটা .gitignore করা আছে, কখনো push হবে না)
+# Android Studio নিজে থেকেও sdk.dir যোগ করে দেবে, এখানে শুধু TDLib কী যোগ করুন।
+
+sdk.dir=/path/to/your/Android/sdk
+
+tg.api.id=YOUR_API_ID_NUMBER
+tg.api.hash=YOUR_API_HASH_STRING

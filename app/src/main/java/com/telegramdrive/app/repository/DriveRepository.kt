@@ -196,7 +196,7 @@ class DriveRepository(
         val customName = captionLines.firstOrNull { it.startsWith("#name:") }?.removePrefix("#name:")
         val trashedFrom = captionLines.firstOrNull { it.startsWith("#trashedFrom:") }?.removePrefix("#trashedFrom:")
         val thumbnailBase64 = runCatching {
-            doc.document.minithumbnail?.data?.let { Base64.encodeToString(it, Base64.NO_WRAP) }
+            doc.minithumbnail?.data?.let { Base64.encodeToString(it, Base64.NO_WRAP) }
         }.getOrNull()
         return DriveFileEntity(
             messageId = id,

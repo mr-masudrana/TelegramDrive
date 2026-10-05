@@ -9,7 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.animateItemPlacement
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -54,6 +53,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.telegramdrive.app.data.DriveFileEntity
+import com.telegramdrive.app.ui.FileTypeFilter
+import com.telegramdrive.app.ui.SortOption
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -318,9 +319,7 @@ fun FileListScreen(
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(subFolders, key = { "folder:$it" }) { name ->
                         ListItem(
-                            modifier = Modifier
-                                .animateItemPlacement()
-                                .combinedClickable(onClick = { onOpenFolder(name) }),
+                            modifier = Modifier                                .combinedClickable(onClick = { onOpenFolder(name) }),
                             leadingContent = { Icon(Icons.Filled.Folder, contentDescription = null) },
                             headlineContent = { Text(name) }
                         )
@@ -328,7 +327,7 @@ fun FileListScreen(
                     }
                     items(files, key = { it.messageId }) { file ->
                         FileRow(
-                            modifier = Modifier.animateItemPlacement(),
+                            modifier = Modifier,
                             file = file,
                             isSelected = file.messageId in selectedIds,
                             selectionMode = selectionMode,
@@ -583,6 +582,7 @@ private fun FileRow(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun FolderGridCell(name: String, onClick: () -> Unit) {
     Column(

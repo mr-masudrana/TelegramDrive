@@ -6,38 +6,43 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
+          distribution: "temurin"
           java-version: "17"
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          accept-android-sdk-licenses: false
-
-      - name: Accept Android SDK licenses
+      - name: Set up Android SDK (manual)
         run: |
-          yes | sdkmanager --licenses > /dev/null || true
+          export ANDROID_SDK_ROOT="$HOME/android-sdk"
+          mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
+          cd "$ANDROID_SDK_ROOT/cmdline-tools"
+          curl -sSLo cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-15859902_latest.zip
+          unzip -q cmdline-tools.zip
+          mv cmdline-tools latest
+          rm cmdline-tools.zip
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
+          echo "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
+          echo "$ANDROID_SDK_ROOT/platform-tools" >> "$GITHUB_PATH"
+
+      - name: Accept licenses and install SDK packages
+        run: |
+          yes | sdkmanager --licenses || true
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build debug APK
+      - name: Assemble debug APK
         env:
           TG_API_ID: ${{ secrets.TG_API_ID }}
           TG_API_HASH: ${{ secrets.TG_API_HASH }}
         run: |
-          chmod +x ./gradlew
-          ./gradlew assembleDebug \
-            -PtgApiId="$TG_API_ID" \
-            -PtgApiHash="$TG_API_HASH"
+          gradle assembleDebug -PtgApiId="$TG_API_ID" -PtgApiHash="$TG_API_HASH"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
